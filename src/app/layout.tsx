@@ -14,9 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shah | Web & Mobile App Developer",
+  metadataBase: new URL("https://portfolio-lemon-two-78.vercel.app"),
+  title: "Shah | Software Engineer & Web Developer",
   description:
-    "Freelance web and mobile app developer building fast, modern websites and Android apps.",
+    "Software engineer and web developer building fast, modern websites and mobile apps.",
+  openGraph: {
+    title: "Shah | Software Engineer & Web Developer",
+    description:
+      "Software engineer and web developer building fast, modern websites and mobile apps.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
