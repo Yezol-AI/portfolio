@@ -16,7 +16,7 @@ const services = [
 export default function Home() {
   return (
     <main className="relative flex-1 overflow-hidden">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-accent/20 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-120 w-120 -translate-x-1/2 rounded-full bg-accent/20 blur-[120px]" />
 
       <section className="relative mx-auto flex max-w-6xl flex-col items-start px-4 py-24 sm:px-6 sm:py-32">
         <p className="font-mono text-sm text-accent">&gt; hello, world</p>
