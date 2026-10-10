@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 // TODO: replace with your real email address
-const email = "teamyezolai.hello@gmail.com";
+
 
 export default function ContactPage() {
   return (
