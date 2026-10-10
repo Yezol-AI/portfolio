@@ -2,16 +2,44 @@
 
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { supabase } from "@/lib/supabase";
+
+type Status = "idle" | "sending" | "success" | "error";
 
 const fieldClass =
   "mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors placeholder:text-muted focus:border-accent";
 
 export default function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    if (!supabase) {
+      console.error("Supabase is not configured: check .env.local");
+      setStatus("error");
+      return;
+    }
+
+    setStatus("sending");
+
+    const { error } = await supabase.from("contact_messages").insert({
+      name: String(data.get("name") ?? "").trim(),
+      email: String(data.get("email") ?? "").trim(),
+      project_type: String(data.get("type") ?? "unsure"),
+      message: String(data.get("message") ?? "").trim(),
+    });
+
+    if (error) {
+      console.error("Message failed to send:", error.message);
+      setStatus("error");
+      return;
+    }
+
+    form.reset();
+    setStatus("success");
   }
 
   return (
@@ -28,6 +56,7 @@ export default function ContactForm() {
           name="name"
           type="text"
           required
+          maxLength={100}
           placeholder="Your name"
           className={fieldClass}
         />
@@ -42,6 +71,7 @@ export default function ContactForm() {
           name="email"
           type="email"
           required
+          maxLength={200}
           placeholder="you@example.com"
           className={fieldClass}
         />
@@ -51,7 +81,12 @@ export default function ContactForm() {
         <label htmlFor="type" className="font-mono text-sm text-muted">
           What do you need?
         </label>
-        <select id="type" name="type" defaultValue="website" className={fieldClass}>
+        <select
+          id="type"
+          name="type"
+          defaultValue="website"
+          className={fieldClass}
+        >
           <option value="website">A website</option>
           <option value="app">A mobile app</option>
           <option value="both">Both</option>
@@ -68,6 +103,7 @@ export default function ContactForm() {
           name="message"
           required
           rows={5}
+          maxLength={2000}
           placeholder="What do you want to build?"
           className={fieldClass}
         />
@@ -75,16 +111,25 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className="rounded-md bg-accent px-6 py-3 font-medium text-background transition-opacity hover:opacity-90"
+        disabled={status === "sending"}
+        className="rounded-md bg-accent px-6 py-3 font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        Send message
+        {status === "sending" ? "Sending..." : "Send message"}
       </button>
 
-      {submitted && (
-        <p className="font-mono text-sm text-accent-2">
-          Preview only: sending is not connected yet, so nothing was sent.
-        </p>
-      )}
+      <div aria-live="polite">
+        {status === "success" && (
+          <p className="font-mono text-sm text-accent">
+            Message sent. Thank you, I will reply by email.
+          </p>
+        )}
+        {status === "error" && (
+          <p className="font-mono text-sm text-accent-2">
+            Something went wrong and your message was not sent. Please try
+            again or email me directly.
+          </p>
+        )}
+      </div>
     </form>
   );
 }
