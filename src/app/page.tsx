@@ -1,5 +1,18 @@
 import Link from "next/link";
 
+const services = [
+  {
+    tag: "01 / web",
+    title: "Websites",
+    text: "Fast, responsive sites for businesses and creators, from landing pages to full web apps.",
+  },
+  {
+    tag: "02 / mobile",
+    title: "Mobile apps",
+    text: "Cross-platform apps built with React Native, launching on Android first and sharing one backend with your website.",
+  },
+];
+
 export default function Home() {
   return (
     <main className="relative flex-1 overflow-hidden">
@@ -30,6 +43,44 @@ export default function Home() {
             className="rounded-md border border-border px-6 py-3 font-medium transition-colors hover:border-accent hover:text-accent"
           >
             View projects
+          </Link>
+        </div>
+      </section>
+
+      <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <p className="font-mono text-sm text-accent">&gt; what I do</p>
+        <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          Two things, done properly.
+        </h2>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          {services.map((service) => (
+            <div
+              key={service.title}
+              className="rounded-xl border border-border bg-surface p-6 transition-colors hover:border-accent"
+            >
+              <p className="font-mono text-xs text-muted">{service.tag}</p>
+              <h3 className="mt-3 text-xl font-semibold">{service.title}</h3>
+              <p className="mt-3 text-muted">{service.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <div className="rounded-xl border border-border bg-surface px-6 py-12 text-center">
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Let&apos;s build something.
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-muted">
+            Have a website or app in mind? Tell me about it and I&apos;ll get
+            back to you.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-8 inline-block rounded-md bg-accent px-6 py-3 font-medium text-background transition-opacity hover:opacity-90"
+          >
+            Start a project
           </Link>
         </div>
       </section>
