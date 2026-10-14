@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { projects, type ProjectStatus } from "../../data/projects";
 
 export const metadata = {
@@ -51,8 +52,16 @@ export default function ProjectsPage() {
               ))}
             </ul>
 
-            {(project.url || project.repoUrl) && (
+                        {(project.caseStudy || project.url || project.repoUrl) && (
               <div className="mt-auto flex flex-wrap gap-5 pt-6">
+                {project.caseStudy && (
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="text-sm font-medium text-accent transition-opacity hover:opacity-80"
+                  >
+                    Case study &rarr;
+                  </Link>
+                )}
                 {project.url && (
                   <a
                     href={project.url}
