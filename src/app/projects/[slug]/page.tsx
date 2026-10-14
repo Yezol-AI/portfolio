@@ -20,6 +20,42 @@ export async function generateMetadata({
   return { title: project.title, description: project.summary };
 }
 
+function ArrowIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12.5 10 17.5 19 7.5" />
+    </svg>
+  );
+}
+
 function Section({
   label,
   title,
@@ -30,19 +66,65 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mt-14">
-      <p className="font-mono text-sm text-accent">&gt; {label}</p>
-      <h2 className="mt-3 text-2xl font-bold tracking-tight">{title}</h2>
-      <div className="mt-5">{children}</div>
+    <section className="mt-16">
+      <p className="font-mono text-xs uppercase tracking-widest text-accent-2">
+        &gt; {label}
+      </p>
+      <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+        {title}
+      </h2>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }
 
-function List({ items }: { items: string[] }) {
+function BuiltList({ items }: { items: string[] }) {
   return (
-    <ul className="list-disc space-y-3 pl-5 text-muted">
+    <ul className="grid gap-3 md:grid-cols-2">
       {items.map((item) => (
-        <li key={item}>{item}</li>
+        <li
+          key={item}
+          className="glass flex gap-3 rounded-2xl p-4 text-sm leading-relaxed text-muted"
+        >
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-2">
+            <CheckIcon />
+          </span>
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function NumberedList({ items }: { items: string[] }) {
+  return (
+    <ol className="space-y-3">
+      {items.map((item, index) => (
+        <li
+          key={item}
+          className="glass flex gap-4 rounded-2xl p-5 text-sm leading-relaxed text-muted"
+        >
+          <span className="font-mono text-sm text-accent-2">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function NextList({ items }: { items: string[] }) {
+  return (
+    <ul className="glass divide-y divide-white/5 rounded-3xl px-6 py-2">
+      {items.map((item) => (
+        <li
+          key={item}
+          className="flex gap-3 py-4 text-sm leading-relaxed text-muted"
+        >
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+          {item}
+        </li>
       ))}
     </ul>
   );
@@ -58,31 +140,43 @@ export default async function CaseStudyPage({
   if (!project || !project.caseStudy) notFound();
 
   const study = project.caseStudy;
+  const isNorthform = project.slug.startsWith("northform");
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-      <Link
-        href="/projects"
-        className="font-mono text-sm text-muted transition-colors hover:text-accent"
-      >
-        &larr; all projects
+    <main className="relative mx-auto max-w-4xl px-4 pb-24 pt-12 sm:px-6 sm:pt-16">
+      <div
+        className={`pointer-events-none absolute left-1/2 top-0 -z-10 h-72 w-2/3 -translate-x-1/2 rounded-full blur-3xl ${
+          isNorthform ? "bg-[#FF5B2E]/15" : "bg-accent/20"
+        }`}
+        aria-hidden="true"
+      />
+
+      <Link href="/projects" className="btn-ghost">
+        &larr; All projects
       </Link>
 
-      <p className="mt-8 font-mono text-sm text-accent">&gt; case study</p>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+      <p className="mt-10 font-mono text-xs uppercase tracking-widest text-accent-2">
+        &gt; case study
+      </p>
+      <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-6xl">
         {project.title}
       </h1>
-      <p className="mt-4 text-lg text-muted">{project.summary}</p>
+      <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+        {project.summary}
+      </p>
 
-      <div className="mt-6 flex flex-wrap gap-5">
+      <div className="mt-8 flex flex-wrap gap-3">
         {project.url && (
           <a
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-accent transition-opacity hover:opacity-80"
+            className="btn-primary pr-2!"
           >
-            View project &rarr;
+            View project
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+              <ArrowIcon />
+            </span>
           </a>
         )}
         {project.repoUrl && (
@@ -90,35 +184,41 @@ export default async function CaseStudyPage({
             href={project.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-muted transition-colors hover:text-accent"
+            className="btn-ghost"
           >
-            Source code &rarr;
+            Source code
           </a>
         )}
       </div>
 
       {study.image && (
-        <Image
-          src={study.image.src}
-          alt={study.image.alt}
-          width={study.image.width}
-          height={study.image.height}
-          sizes="(min-width: 768px) 768px, 100vw"
-          className="mt-10 w-full rounded-xl border border-border"
-          priority
-        />
+        <div className="glass mt-12 rounded-3xl p-2 sm:p-3">
+          <Image
+            src={study.image.src}
+            alt={study.image.alt}
+            width={study.image.width}
+            height={study.image.height}
+            sizes="(min-width: 896px) 896px, 100vw"
+            className="w-full rounded-2xl"
+            priority
+          />
+        </div>
       )}
 
       <Section label="the brief" title="What I set out to do">
-        <p className="text-muted">{study.brief}</p>
+        <div className="glass rounded-3xl p-6 sm:p-8">
+          <p className="text-base leading-relaxed text-muted sm:text-lg">
+            {study.brief}
+          </p>
+        </div>
       </Section>
 
       <Section label="what I built" title="What it does">
-        <List items={study.built} />
+        <BuiltList items={study.built} />
       </Section>
 
       <Section label="how it works" title="Under the hood">
-        <List items={study.how} />
+        <NumberedList items={study.how} />
       </Section>
 
       <Section label="tech" title="Stack">
@@ -126,7 +226,7 @@ export default async function CaseStudyPage({
           {project.stack.map((tech) => (
             <li
               key={tech}
-              className="rounded-md bg-surface px-2 py-1 font-mono text-xs text-muted"
+              className="glass rounded-2xl px-4 py-2 font-mono text-sm"
             >
               {tech}
             </li>
@@ -135,8 +235,31 @@ export default async function CaseStudyPage({
       </Section>
 
       <Section label="what's next" title="Where it goes from here">
-        <List items={study.next} />
+        <NextList items={study.next} />
       </Section>
+
+      <div className="glass relative mt-20 overflow-hidden rounded-3xl p-8 sm:p-12">
+        <div
+          className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-accent/30 blur-3xl"
+          aria-hidden="true"
+        />
+        <div className="relative flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-4xl">
+              Need something like this?
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-muted">
+              Tell me what you have in mind and I&apos;ll get back to you.
+            </p>
+          </div>
+          <Link href="/contact" className="btn-primary pr-2!">
+            Start a project
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+              <ArrowIcon />
+            </span>
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }

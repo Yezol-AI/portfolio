@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 type Status = "idle" | "sending" | "success" | "error";
 
 const fieldClass =
-  "mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-foreground outline-none transition-colors placeholder:text-muted focus:border-accent";
+  "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-foreground outline-none transition-colors placeholder:text-muted focus:border-accent-2 focus:bg-white/8";
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -45,10 +45,10 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-xl border border-border bg-surface p-6"
+      className="glass space-y-5 rounded-3xl p-6 sm:p-8"
     >
       <div>
-        <label htmlFor="name" className="font-mono text-sm text-muted">
+        <label htmlFor="name" className="font-mono text-xs text-muted">
           Name
         </label>
         <input
@@ -63,7 +63,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="email" className="font-mono text-sm text-muted">
+        <label htmlFor="email" className="font-mono text-xs text-muted">
           Email
         </label>
         <input
@@ -78,7 +78,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="type" className="font-mono text-sm text-muted">
+        <label htmlFor="type" className="font-mono text-xs text-muted">
           What do you need?
         </label>
         <select
@@ -95,7 +95,7 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="message" className="font-mono text-sm text-muted">
+        <label htmlFor="message" className="font-mono text-xs text-muted">
           Tell me about your project
         </label>
         <textarea
@@ -112,19 +112,19 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="rounded-md bg-accent px-6 py-3 font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
       >
         {status === "sending" ? "Sending..." : "Send message"}
       </button>
 
       <div aria-live="polite">
         {status === "success" && (
-          <p className="font-mono text-sm text-accent">
+          <p className="font-mono text-sm text-emerald-400">
             Message sent. Thank you, I will reply by email.
           </p>
         )}
         {status === "error" && (
-          <p className="font-mono text-sm text-accent-2">
+          <p className="font-mono text-sm text-red-400">
             Something went wrong and your message was not sent. Please try
             again or email me directly.
           </p>
