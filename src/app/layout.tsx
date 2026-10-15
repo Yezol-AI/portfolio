@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./motion.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import GlowTracker from "@/components/motion/GlowTracker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${bricolage.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <GlowTracker />
         <Navbar />
         {children}
         <Footer />

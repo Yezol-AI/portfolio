@@ -1,0 +1,305 @@
+:root {
+  --nf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --nf-accent: 139, 92, 246; /* matches --accent #8b5cf6 */
+  --nf-accent-2: 167, 139, 250; /* matches --accent-2 #a78bfa */
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes nf-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
+}
+
+@keyframes nf-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(70px, -50px, 0) scale(1.18); }
+}
+
+@keyframes nf-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.1); }
+  50% { transform: translate3d(-80px, 40px, 0) scale(0.92); }
+}
+
+@keyframes nf-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(40px, 60px, 0) scale(1.12); }
+}
+
+@keyframes nf-rise {
+  from { opacity: 0; transform: translate3d(0, 28px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes nf-pulse-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* ---------- Floating utilities ---------- */
+.nf-float {
+  animation: nf-float 7s ease-in-out infinite;
+  animation-delay: var(--nf-delay, 0ms);
+  will-change: transform;
+}
+
+.nf-float-slow {
+  animation: nf-float 10s ease-in-out infinite;
+  animation-delay: var(--nf-delay, 0ms);
+  will-change: transform;
+}
+
+/* ---------- Page-load entrance (for hero and page headers) ---------- */
+.nf-rise {
+  opacity: 0;
+  animation: nf-rise 1s var(--nf-ease) forwards;
+  animation-delay: var(--nf-delay, 0ms);
+}
+
+/* ---------- Scroll reveal ---------- */
+.nf-reveal {
+  transition:
+    opacity 0.9s var(--nf-ease),
+    transform 0.9s var(--nf-ease);
+  transition-delay: var(--nf-delay, 0ms);
+}
+
+.nf-reveal[data-state="hidden"] {
+  opacity: 0;
+  transform: translate3d(0, var(--nf-y, 24px), 0);
+  will-change: transform, opacity;
+}
+
+.nf-reveal[data-state="shown"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ---------- Ambient glow orbs (violet only) ---------- */
+.nf-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.nf-orb-a {
+  top: -10%;
+  left: -8%;
+  width: 36rem;
+  height: 36rem;
+  background: rgba(var(--nf-accent), 0.24);
+  animation: nf-drift-a 22s ease-in-out infinite;
+}
+
+.nf-orb-b {
+  top: 30%;
+  right: -12%;
+  width: 32rem;
+  height: 32rem;
+  background: rgba(var(--nf-accent-2), 0.14);
+  animation: nf-drift-b 28s ease-in-out infinite;
+}
+
+.nf-orb-c {
+  bottom: -14%;
+  left: 28%;
+  width: 28rem;
+  height: 28rem;
+  background: rgba(var(--nf-accent), 0.16);
+  animation: nf-drift-c 32s ease-in-out infinite;
+}
+
+/* ---------- Pulse dot ---------- */
+.nf-pulse {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: rgb(var(--nf-accent));
+}
+
+.nf-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgb(var(--nf-accent));
+  animation: nf-pulse-ring 2s ease-out infinite;
+}
+
+/* ---------- Glow system: violet light only, never movement ---------- */
+.glass-hover,
+[data-glow] {
+  transition:
+    border-color 0.5s var(--nf-ease),
+    box-shadow 0.5s var(--nf-ease),
+    background-color 0.5s var(--nf-ease);
+}
+
+/* Cancel lift: remove this block if you want your old 4px hover lift back */
+.glass-hover:hover,
+[data-glow]:hover {
+  transform: none;
+  translate: none;
+}
+
+/* Cursor-follow light sits behind the content, above the card background */
+[data-glow] {
+  position: relative;
+  isolation: isolate;
+}
+
+[data-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s var(--nf-ease);
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--nf-accent), 0.18),
+    transparent 62%
+  );
+}
+
+[data-glow]:hover::before {
+  opacity: 1;
+}
+
+/* The violet edge glow */
+.glass-hover:hover,
+[data-glow]:hover {
+  border-color: rgba(var(--nf-accent-2), 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(var(--nf-accent), 0.3),
+    0 0 36px -6px rgba(var(--nf-accent), 0.45),
+    0 0 90px -24px rgba(var(--nf-accent), 0.35);
+}
+
+/* ---------- Respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .nf-float,
+  .nf-float-slow,
+  .nf-orb,
+  .nf-pulse::after {
+    animation: none !important;
+  }
+
+  .nf-rise {
+    opacity: 1;
+    animation: none !important;
+  }
+
+  .nf-reveal,
+  .nf-reveal[data-state="hidden"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+/* ---------- Floating nav ---------- */
+@keyframes nf-nav-in {
+  from { opacity: 0; transform: translate3d(0, -18px, 0) scale(0.98); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.nf-nav-pill {
+  position: relative;
+  animation: nf-nav-in 1s var(--nf-ease) backwards;
+  transition:
+    transform 0.6s var(--nf-ease),
+    background-color 0.6s var(--nf-ease),
+    box-shadow 0.6s var(--nf-ease);
+  will-change: transform;
+}
+
+[data-scrolled="true"] .nf-nav-pill {
+  transform: translate3d(0, -2px, 0) scale(0.975);
+  background-color: rgba(17, 17, 28, 0.7);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 20px 50px -14px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(var(--nf-accent), 0.18);
+}
+
+.nf-nav-pill:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 60px -14px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(var(--nf-accent-2), 0.32),
+    0 0 40px -10px rgba(var(--nf-accent), 0.4);
+}
+
+/* Scroll progress line along the bottom edge of the pill */
+.nf-nav-progress {
+  position: absolute;
+  left: 1.75rem;
+  right: 1.75rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--nf-accent), 0),
+    rgb(var(--nf-accent-2))
+  );
+  transform-origin: left center;
+  transform: scaleX(var(--nf-progress, 0));
+  opacity: 0;
+  transition: opacity 0.5s var(--nf-ease);
+  pointer-events: none;
+}
+
+[data-scrolled="true"] .nf-nav-progress {
+  opacity: 1;
+}
+
+/* ---------- Menu pop-in ---------- */
+@keyframes nf-menu-in {
+  from { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.96); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.nf-menu-in {
+  transform-origin: top center;
+  animation: nf-menu-in 0.35s var(--nf-ease) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-nav-pill {
+    animation: none;
+    transition: none;
+  }
+  .nf-nav-progress {
+    transition: none;
+  }
+  .nf-menu-in {
+    animation: none;
+  }
+}
+/* ---------- Hero ---------- */
+
+/* Layers that drift with the cursor. Set --nf-depth inline (higher = moves more) */
+.nf-depth {
+  transform: translate3d(
+    calc(var(--nf-px, 0) * var(--nf-depth, 20) * 1px),
+    calc(var(--nf-py, 0) * var(--nf-depth, 20) * 1px),
+    0
+  );
+  will-change: transform;
+}
+
+/* Hero content lifts and fades as you scroll away */
+.nf-hero-content {
+  transform: translate3d(0, calc(var(--nf-scroll, 0) * -40px), 0);
+  opacity: calc(1 - var(--nf-scroll, 0) * 1.1);
+  will-change: transform, opacity;
+}
