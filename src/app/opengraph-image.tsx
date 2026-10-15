@@ -1,3 +1,4 @@
+
 import { ImageResponse } from "next/og";
 
 export const alt = "Shah | Software Engineer & Web Developer";
@@ -15,10 +16,10 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: 80,
-          background: "#0B0F14",
+          background: "#0a0a12",
         }}
       >
-        <div style={{ display: "flex", fontSize: 34, color: "#22D3EE" }}>
+        <div style={{ display: "flex", fontSize: 34, color: "#a78bfa" }}>
           {"< Shah />"}
         </div>
         <div
@@ -27,7 +28,7 @@ export default function OpengraphImage() {
             marginTop: 28,
             fontSize: 84,
             fontWeight: 700,
-            color: "#E6EDF3",
+            color: "#f4f2fa",
           }}
         >
           Websites and mobile apps
@@ -37,7 +38,7 @@ export default function OpengraphImage() {
             display: "flex",
             marginTop: 24,
             fontSize: 36,
-            color: "#8B98A5",
+            color: "#9a97ab",
           }}
         >
           Software engineer and web developer
